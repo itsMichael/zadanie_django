@@ -11,6 +11,7 @@
           <th>Last name</th>
           <th>Birthday</th>
           <th>BizzFuzz</th>
+          <th>Options</th>
         </tr>
           {% for object in data %}
           <tr>
@@ -18,6 +19,7 @@
             <td>{{object.last_name}}</td>
             <td>{{object.birthday}}</td>
             <td>{{object.random_number}}</td>
+            <td><a href="/remove?id={{object.id}}">Remove</a> | <a href="/edit?id={{object.id}}">Edit</a>
           </tr>
           {% endfor %}
       </table>
