@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import \
-    render_to_response, RequestContext, HttpResponseRedirect
+    render_to_response, RequestContext, HttpResponseRedirect, HttpResponse
 from users_base.models import User, UserForm
 import random
+import csv
 
 
 def home(request):
@@ -14,7 +16,7 @@ def add(request):
         form_user = UserForm(request.POST)
         form_user.is_valid()
         data = form_user.cleaned_data
-        if form_user.is_valid()==True:
+        if form_user.is_valid() == True:
             obj = User(
                 first_name=data['first_name'],
                 last_name=data['last_name'],
@@ -35,6 +37,22 @@ def remove(request):
     return HttpResponseRedirect('/')
 
 
+def generate_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="users.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['First name', 'Last name', 'Birthday'])
+    for obj in User.objects.all():
+        writer.writerow([
+            obj.first_name.encode("utf-8"),
+            obj.last_name.encode("utf-8"),
+            obj.birthday])
+
+    return response
+
+
 def edit(request):
     if request.method == "GET":
         user_for_id = User.objects.get(id=request.GET.get('id'))
@@ -52,7 +70,7 @@ def edit(request):
         form_user = UserForm(request.POST)
         form_user.is_valid()
         data = form_user.cleaned_data
-        if form_user.is_valid()==True:
+        if form_user.is_valid() == True:
             user_for_id.first_name = data['first_name']
             user_for_id.last_name = data['last_name']
             user_for_id.birthday = data['birthday']

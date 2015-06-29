@@ -7,18 +7,28 @@
       {% else %}
       <table class="table">
         <tr>
+          <th>#</th>
           <th>First name</th>
           <th>Last name</th>
           <th>Birthday</th>
+          <th>Random number</th>
           <th>BizzFuzz</th>
           <th>Options</th>
         </tr>
           {% for object in data %}
           <tr>
+            <td>{{forloop.counter}}
             <td>{{object.first_name}}</td>
             <td>{{object.last_name}}</td>
             <td>{{object.birthday}}</td>
             <td>{{object.random_number}}</td>
+            <td>
+            {% if object.random_number|divisibleby:3 and object.random_number|divisibleby:5 %}bizzFuzz
+            {% elif object.random_number|divisibleby:3 %}Bizz
+            {% elif object.random_number|divisibleby:5 %}
+            Fuzz
+            {% else %}{{object.random_number}}{% endif %}
+            </td>
             <td><a href="/edit?id={{object.id}}">Edit</a> | <a href="/remove?id={{object.id}}">Remove</a></td>
           </tr>
           {% endfor %}
