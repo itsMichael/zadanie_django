@@ -1,6 +1,7 @@
 from django.shortcuts import \
     render_to_response, RequestContext, HttpResponseRedirect
 from users_base.models import User, UserForm
+import random
 
 
 def home(request):
@@ -18,7 +19,7 @@ def add(request):
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 birthday=data['birthday'],
-                random_number=1,
+                random_number=random.randint(1, 100),
                 )
             obj.save()
         return HttpResponseRedirect("/")
