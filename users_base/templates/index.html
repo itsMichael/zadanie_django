@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+  {% block title %}- Home{% endblock %}
+  {% block content %}
+    <div style="width:70%;" class="container">
+      {% if not data %}
+        <h1>No users. <a href="/add">Add</a></h1>
+      {% else %}
+      <table class="table">
+        <tr>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Birthday</th>
+          <th>BizzFuzz</th>
+        </tr>
+          {% for object in data %}
+          <tr>
+            <td>{{object.first_name}}</td>
+            <td>{{object.last_name}}</td>
+            <td>{{object.birthday}}</td>
+            <td>{{object.random_number}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+  {% endblock %}
+
