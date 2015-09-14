@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load i18n tags %}
+
   {% block title %}- Home{% endblock %}
   {% block content %}
     <div style="width:70%;" class="container">
@@ -23,11 +25,7 @@
             <td>{{object.birthday}}</td>
             <td>{{object.random_number}}</td>
             <td>
-            {% if object.random_number|divisibleby:3 and object.random_number|divisibleby:5 %}bizzFuzz
-            {% elif object.random_number|divisibleby:3 %}Bizz
-            {% elif object.random_number|divisibleby:5 %}
-            Fuzz
-            {% else %}{{object.random_number}}{% endif %}
+            {{object.random_number|bizzfuzz}}
             </td>
             <td><a href="/edit?id={{object.id}}">Edit</a> | <a href="/remove?id={{object.id}}">Remove</a></td>
           </tr>
