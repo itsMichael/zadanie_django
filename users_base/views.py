@@ -16,7 +16,7 @@ def home(request):
 def add(request):
     if request.method == "POST":
         form_user = UserForm(request.POST)
-        if form_user.is_valid() == True:
+        if form_user.is_valid():
             data = form_user.cleaned_data
             obj = User(
                 first_name=data['first_name'],

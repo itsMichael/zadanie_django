@@ -11,4 +11,4 @@ class User(models.Model):
         verbose_name_plural = "Users"
 
     def __unicode__(self):
-        return self.first_name+" "+self.last_name
+        return "{} {}".format(self.first_name, self.last_name)
