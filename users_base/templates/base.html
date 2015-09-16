@@ -46,6 +46,13 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% endif %}{% if message.tags == 'error' %}alert-danger{% endif %}" role="alert">
+          <a href="#" class="alert-link">{{message}}</a>
+        </div>
+        {% endfor %}
+    {% endif %}
     {% block content %} 
     {% endblock %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

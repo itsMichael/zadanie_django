@@ -5,12 +5,18 @@ from users_base.models import User
 import random
 import csv
 from forms import UserForm
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+from django.contrib.messages import get_messages
 
 
 def home(request):
     users = User.objects.all()
+    storage = get_messages(request)
+    for message in storage:
+        print message
     return render_to_response(
-        'index.html', {'data': users})
+        'index.html', {'data': users}, context_instance=RequestContext(request))
 
 
 def add(request):
@@ -18,16 +24,12 @@ def add(request):
         form_user = UserForm(request.POST)
         if form_user.is_valid():
             data = form_user.cleaned_data
-            obj = User(
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                birthday=data['birthday'],
-                random_number=random.randint(1, 100),
-                )
-            obj.save()
-            return HttpResponseRedirect("/")
+            form_user.save()
+            messages.success(request, 'Profile added.')
+            return HttpResponseRedirect(reverse('home'))
         else:
-            return HttpResponseRedirect("/add")
+            messages.error(request, 'Incorrect data.')
+            return HttpResponseRedirect(reverse('add'))
     if request.method == "GET":
         return render_to_response(
             'add.html', {'form': UserForm},
@@ -37,7 +39,8 @@ def add(request):
 def remove(request):
     if request.method == "GET":
         User.objects.get(id=request.GET.get('id')).delete()
-    return HttpResponseRedirect('/')
+        messages.success(request, 'Profile removed.')
+    return HttpResponseRedirect(reverse('home'))
 
 
 def generate_csv(request):
@@ -52,7 +55,6 @@ def generate_csv(request):
             obj.first_name.encode("utf-8"),
             obj.last_name.encode("utf-8"),
             obj.birthday])
-
     return response
 
 
@@ -70,10 +72,13 @@ def edit(request):
     if request.method == "POST":
         user_for_id = User.objects.get(id=request.GET.get('id'))
         form_user = UserForm(request.POST)
-        if form_user.is_valid() == True:
+        if form_user.is_valid():
             data = form_user.cleaned_data
             user_for_id.first_name = data['first_name']
             user_for_id.last_name = data['last_name']
             user_for_id.birthday = data['birthday']
             user_for_id.save()
-        return HttpResponseRedirect('/')
+            messages.success(request, 'Profile details updated.')
+        else:
+            messages.error(request, 'Incorrect data')
+        return HttpResponseRedirect(reverse('home'))
