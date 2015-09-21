@@ -8,6 +8,7 @@ from forms import UserForm
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
+from django.views.generic import View
 
 
 def home(request):
@@ -19,7 +20,7 @@ def home(request):
         'index.html', {'data': users}, context_instance=RequestContext(request))
 
 
-def add(request):
+"""def add(request):
     if request.method == "POST":
         form_user = UserForm(request.POST)
         if form_user.is_valid():
@@ -33,14 +34,30 @@ def add(request):
     if request.method == "GET":
         return render_to_response(
             'add.html', {'form': UserForm},
-            context_instance=RequestContext(request))
+            context_instance=RequestContext(request))"""
 
 
-def remove(request):
+class AddView(View):
+    form_class = UserForm
+    template_name = 'add.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # <process form cleaned data>
+            return HttpResponseRedirect(reverse('home'))
+        return render(request, self.template_name, {'form': form})
+
+
+"""def remove(request):
     if request.method == "GET":
         User.objects.get(id=request.GET.get('id')).delete()
         messages.success(request, 'Profile removed.')
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('home'))"""
 
 
 def generate_csv(request):
@@ -58,7 +75,7 @@ def generate_csv(request):
     return response
 
 
-def edit(request):
+"""def edit(request):
     if request.method == "GET":
         user_for_id = User.objects.get(id=request.GET.get('id'))
         UserFormEdit = UserForm(
@@ -81,4 +98,4 @@ def edit(request):
             messages.success(request, 'Profile details updated.')
         else:
             messages.error(request, 'Incorrect data')
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home'))"""
