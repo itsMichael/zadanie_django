@@ -4,7 +4,7 @@
   {% block title %}- Home{% endblock %}
   {% block content %}
     <div style="width:70%;" class="container">
-      {% if not data %}
+      {% if not object_list %}
         <h1>No users. <a href="/add">Add</a></h1>
       {% else %}
       <table class="table">
@@ -17,7 +17,7 @@
           <th>BizzFuzz</th>
           <th>Options</th>
         </tr>
-          {% for object in data %}
+          {% for object in object_list %}
           <tr>
             <td>{{forloop.counter}}
             <td>{{object.first_name}}</td>

@@ -8,16 +8,20 @@ from forms import UserForm
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
-from django.views.generic import View, DeleteView, UpdateView
+from django.views.generic import View, DeleteView, UpdateView, ListView
 
 
-def home(request):
+"""def home(request):
     users = User.objects.all()
     storage = get_messages(request)
     for message in storage:
         print message
     return render_to_response(
-        'index.html', {'data': users}, context_instance=RequestContext(request))
+        'index.html', {'data': users}, context_instance=RequestContext(request))"""
+
+class Home(ListView):
+    model = User
+    template_name = "index.html"
 
 
 """def add(request):
