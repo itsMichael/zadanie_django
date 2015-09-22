@@ -27,7 +27,7 @@
             <td>
             {{object.random_number|bizzfuzz}}
             </td>
-            <td><a href="/edit?id={{object.id}}">Edit</a> | <a href="/remove?id={{object.id}}">Remove</a></td>
+            <td><a href="/edit/{{object.id}}">Edit</a> | <a href="/remove/{{object.id}}">Remove</a></td>
           </tr>
           {% endfor %}
       </table>

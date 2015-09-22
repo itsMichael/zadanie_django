@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import \
-    render_to_response, RequestContext, HttpResponseRedirect, HttpResponse
+    render_to_response, RequestContext, HttpResponseRedirect, HttpResponse, render
 from users_base.models import User
 import random
 import csv
@@ -8,7 +8,7 @@ from forms import UserForm
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
-from django.views.generic import View
+from django.views.generic import View, DeleteView, UpdateView
 
 
 def home(request):
@@ -37,7 +37,7 @@ def home(request):
             context_instance=RequestContext(request))"""
 
 
-class AddView(View):
+class AddUser(View):
     form_class = UserForm
     template_name = 'add.html'
 
@@ -48,9 +48,17 @@ class AddView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            # <process form cleaned data>
-            return HttpResponseRedirect(reverse('home'))
+            form.save()
+            messages.success(request, 'Profile added.')
+        else:
+            messages.error(request, 'Incorrect data.')
         return render(request, self.template_name, {'form': form})
+
+
+class DeleteUser(DeleteView):
+    model = User
+    template_name = "user_confirm_delete.html"
+    success_url = "/"
 
 
 """def remove(request):
@@ -73,6 +81,13 @@ def generate_csv(request):
             obj.last_name.encode("utf-8"),
             obj.birthday])
     return response
+
+
+class UpdateUser(UpdateView):
+    model = User
+    template_name = "add.html"
+    fields = ['first_name', 'last_name', 'birthday']
+    success_url = "/"
 
 
 """def edit(request):
