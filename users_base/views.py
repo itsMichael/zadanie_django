@@ -89,7 +89,7 @@ def generate_csv(request):
 
 class UpdateUser(UpdateView):
     model = User
-    template_name = "add.html"
+    template_name = "edit.html"
     fields = ['first_name', 'last_name', 'birthday']
     success_url = "/"
 
