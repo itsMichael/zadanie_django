@@ -8,7 +8,7 @@ from forms import UserForm
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
-from django.views.generic import View, DeleteView, UpdateView, ListView
+from django.views.generic import View, DeleteView, UpdateView, ListView, CreateView
 
 
 """def home(request):
@@ -41,22 +41,11 @@ class Home(ListView):
             context_instance=RequestContext(request))"""
 
 
-class AddUser(View):
-    form_class = UserForm
+class AddUser(CreateView):
+    model = User
     template_name = 'add.html'
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile added.')
-        else:
-            messages.error(request, 'Incorrect data.')
-        return render(request, self.template_name, {'form': form})
+    fields = ['first_name', 'last_name', 'birthday']
+    success_url = "/"
 
 
 class DeleteUser(DeleteView):
