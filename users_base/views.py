@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.views.generic import View, DeleteView, UpdateView, ListView, CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 """def home(request):
@@ -41,17 +42,23 @@ class Home(ListView):
             context_instance=RequestContext(request))"""
 
 
-class AddUser(CreateView):
+class AddUser(SuccessMessageMixin, CreateView):
     model = User
     template_name = 'add.html'
     fields = ['first_name', 'last_name', 'birthday']
-    success_url = "/"
+    success_message = "%(first_name)s was created successfully"
+
+    def get_success_url(self): 
+            return reverse('home') 
 
 
-class DeleteUser(DeleteView):
+class DeleteUser(SuccessMessageMixin, DeleteView):
     model = User
     template_name = "user_confirm_delete.html"
-    success_url = "/"
+    success_message = "%(first_name)s was deleted successfully"
+
+    def get_success_url(self): 
+            return reverse('home') 
 
 
 """def remove(request):
@@ -76,11 +83,14 @@ def generate_csv(request):
     return response
 
 
-class UpdateUser(UpdateView):
+class UpdateUser(SuccessMessageMixin, UpdateView):
     model = User
     template_name = "edit.html"
     fields = ['first_name', 'last_name', 'birthday']
-    success_url = "/"
+    success_message = "%(first_name)s was updated successfully"
+
+    def get_success_url(self): 
+            return reverse('home') 
 
 
 """def edit(request):
