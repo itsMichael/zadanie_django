@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.views.generic import View, DeleteView, UpdateView, ListView, CreateView
 from django.contrib.messages.views import SuccessMessageMixin
+from users_base.serializers import UserListSerializer
+from rest_framework import generics, filters
 
 
 """def home(request):
@@ -117,3 +119,18 @@ class UpdateUser(SuccessMessageMixin, UpdateView):
         else:
             messages.error(request, 'Incorrect data')
         return HttpResponseRedirect(reverse('home'))"""
+
+
+### REST ###
+
+
+class UsersFilter(filters.FilterSet):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'birthday', 'random_number']
+
+
+class UsersList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserListSerializer
+    filter_class = UsersFilter
