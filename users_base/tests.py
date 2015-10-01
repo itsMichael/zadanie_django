@@ -1,5 +1,8 @@
 from django.test import TestCase
 from users_base.models import User
+import unittest
+from django.test import Client
+from django.core.urlresolvers import reverse
 
 
 class UserModelTestCase(TestCase):
@@ -11,4 +14,24 @@ class UserModelTestCase(TestCase):
         one = User.objects.get(first_name="Janek")
         two = User.objects.get(first_name="Janina")
         self.assertEqual(one.last_name, "Kowalski")
-        self.assertEqual(two.last_name, "Kowalska")
+        self.assertEqual(two.last_name, "Kowalska")        
+
+
+class ViewIndexTest(unittest.TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_details(self):
+        response = self.client.get(reverse('home'))
+
+        self.assertEqual(response.status_code, 200)
+
+
+class ViewAddTest(unittest.TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_details(self):
+        response = self.client.get(reverse('add'))
+
+        self.assertEqual(response.status_code, 200)
