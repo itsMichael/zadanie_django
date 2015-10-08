@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import \
-    render_to_response, RequestContext, HttpResponseRedirect, HttpResponse, render
+from django.shortcuts import HttpResponse
 from users_base.models import User
-import random
 import csv
-from forms import UserForm
 from django.core.urlresolvers import reverse
-from django.contrib import messages
-from django.contrib.messages import get_messages
 from django.views.generic import View, DeleteView, UpdateView, ListView, CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 
