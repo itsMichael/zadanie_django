@@ -20,11 +20,15 @@ class UserModelTestCase(TestCase):
 class ViewIndexTest(unittest.TestCase):
     def setUp(self):
         self.client = Client()
+        User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
+        User.objects.create(first_name="Slawomir", last_name="Cebula", birthday="1994-10-20")
 
     def test_details(self):
-        response = self.client.get(reverse('home'))
-
-        self.assertEqual(response.status_code, 200)
+        self.response = self.client.get(reverse('home'))
+        self.assertTrue('object_list' in self.response.context)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual([entry.pk for entry in self.response.context['object_list']], [1, 2])
+        self.assertEqual([entry.first_name for entry in self.response.context['object_list']], ["Stefan", "Slawomir"])
 
 
 class ViewAddTest(unittest.TestCase):
@@ -32,6 +36,7 @@ class ViewAddTest(unittest.TestCase):
         self.client = Client()
 
     def test_details(self):
-        response = self.client.get(reverse('add'))
-
-        self.assertEqual(response.status_code, 200)
+        self.client.post(reverse('add'), {'first_name': "jan", 'last_name': 'janowski', 'birthday': 1900-10-22})
+        self.response = self.client.get(reverse('home'))
+        self.assertEqual(self.response.status_code, 200)
+        print self.response
