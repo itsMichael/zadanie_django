@@ -11,10 +11,10 @@ class UserModelTestCase(TestCase):
         User.objects.create(first_name="Janina", last_name="Kowalska", birthday="1990-10-20")
 
     def test_usermodel(self):
-        one = User.objects.get(first_name="Janek")
-        two = User.objects.get(first_name="Janina")
-        self.assertEqual(one.last_name, "Kowalski")
-        self.assertEqual(two.last_name, "Kowalska")        
+        self.one = User.objects.get(first_name="Janek")
+        self.two = User.objects.get(first_name="Janina")
+        self.assertEqual(self.one.last_name, "Kowalski")
+        self.assertEqual(self.two.last_name, "Kowalska")
 
 
 class ViewIndexTest(unittest.TestCase):
@@ -36,7 +36,5 @@ class ViewAddTest(unittest.TestCase):
         self.client = Client()
 
     def test_details(self):
-        self.client.post(reverse('add'), {'first_name': "jan", 'last_name': 'janowski', 'birthday': 1900-10-22})
-        self.response = self.client.get(reverse('home'))
-        self.assertEqual(self.response.status_code, 200)
-        print self.response
+        self.client.post(reverse('add'), {'first_name': "jan", 'last_name': 'janowski', 'birthday': '1900-10-22'})
+        self.assertEqual(User.objects.count(), 1)
