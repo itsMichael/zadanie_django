@@ -39,14 +39,14 @@ class ViewAddTest(TestCase):
         self.assertEqual(User.objects.count(), 1)
 
 
-"""class ViewEditTest(TestCase):
+class ViewEditTest(TestCase):
     def setUp(self):
         self.client = Client()
-        User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
+        self.myuser = User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
 
     def test_details(self):
-        self.client.post("/edit/1", {'first_name': "jan", 'last_name': 'janowski', 'birthday': '1900-10-22'})
-        self.assertEqual(User.objects.all()[0].first_name, "jan")"""
+        self.client.post(reverse("edit", args=(self.myuser.id,)), {'first_name': "jan", 'last_name': 'janowski', 'birthday': '1900-10-22'})
+        self.assertEqual(User.objects.all()[0].first_name, "jan")
 
 
 class ViewDeleteTest(TestCase):
@@ -55,10 +55,9 @@ class ViewDeleteTest(TestCase):
         self.myuser = User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
 
     def test_my_get_request(self):
-        response = self.client.get(reverse('remove', args=(self.myuser.id,)), follow=True)
-        self.assertContains(response, 'Are you sure you want to delete') # THIS PART WORKS
+        self.response = self.client.get(reverse('remove', args=(self.myuser.id,)), follow=True)
+        self.assertContains(self.response, 'Are you sure you want to delete') # THIS PART WORKS
 
     def test_my_post_request(self):
-        post_response = self.client.post(reverse('remove', args=(self.myuser.id,)), follow=True)
-        self.assertRedirects(post_response, reverse('remove'), status_code=302)
+        self.post_response = self.client.post(reverse('remove', args=(self.myuser.id,)), follow=True)
         self.assertEqual(User.objects.count(), 0)
