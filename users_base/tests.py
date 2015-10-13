@@ -19,15 +19,15 @@ class UserModelTestCase(TestCase):
 class ViewIndexTest(TestCase):
     def setUp(self):
         self.client = Client()
-        User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
-        User.objects.create(first_name="Slawomir", last_name="Cebula", birthday="1994-10-20")
+        self.myuser1 = User.objects.create(first_name="Stefan", last_name="Cebula", birthday="1994-10-20")
+        self.myuser2 = User.objects.create(first_name="Slawomir", last_name="Cebula", birthday="1994-10-20")
 
     def test_details(self):
         self.response = self.client.get(reverse('home'))
         self.assertTrue('object_list' in self.response.context)
         self.assertEqual(self.response.status_code, 200)
-        self.assertEqual([entry.pk for entry in self.response.context['object_list']], [1, 2])
-        self.assertEqual([entry.first_name for entry in self.response.context['object_list']], ["Stefan", "Slawomir"])
+        self.assertEqual([entry.pk for entry in self.response.context['object_list']], [self.myuser1.pk, self.myuser2.pk])
+        self.assertEqual([entry.first_name for entry in self.response.context['object_list']], [self.myuser1.first_name, self.myuser2.first_name])
 
 
 class ViewAddTest(TestCase):
@@ -46,7 +46,7 @@ class ViewEditTest(TestCase):
 
     def test_details(self):
         self.client.post(reverse("edit", args=(self.myuser.id,)), {'first_name': "jan", 'last_name': 'janowski', 'birthday': '1900-10-22'})
-        self.assertEqual(User.objects.all()[0].first_name, "jan")
+        self.assertEqual(User.objects.get(pk=self.myuser.pk).first_name, "jan")
 
 
 class ViewDeleteTest(TestCase):
@@ -56,7 +56,8 @@ class ViewDeleteTest(TestCase):
 
     def test_my_get_request(self):
         self.response = self.client.get(reverse('remove', args=(self.myuser.id,)), follow=True)
-        self.assertContains(self.response, 'Are you sure you want to delete') # THIS PART WORKS
+        self.assertContains(self.response, 'Are you sure you want to delete')
+	self.assertEqual(self.response.status_code, 200)
 
     def test_my_post_request(self):
         self.post_response = self.client.post(reverse('remove', args=(self.myuser.id,)), follow=True)
